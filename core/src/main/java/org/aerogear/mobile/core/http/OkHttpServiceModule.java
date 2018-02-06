@@ -8,16 +8,20 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 
+/**
+ * Created by summers on 1/23/18.
+ */
+
 public class OkHttpServiceModule implements HttpServiceModule {
 
     private OkHttpClient client;
-    private ServiceConfiguration httpServiceConfiguration;
+    private HttpServiceConfiguration httpServiceConfiguration;
 
     /**
      * This is the default no argument constructor for all ServiceModules.
      */
     public OkHttpServiceModule() {
-        this.httpServiceConfiguration = ServiceConfiguration.newConfiguration().build();
+        this.httpServiceConfiguration = new HttpServiceConfiguration();
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         this.client = clientBuilder.build();
     }
@@ -31,8 +35,8 @@ public class OkHttpServiceModule implements HttpServiceModule {
     }
 
     @Override
-    public void bootstrap(final MobileCore core, final ServiceConfiguration configuration) {
-        this.httpServiceConfiguration = configuration;
+    public void bootstrap(MobileCore core, ServiceConfiguration configuration) {
+        this.httpServiceConfiguration = new HttpServiceConfiguration(configuration);
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
         this.client = clientBuilder.build();

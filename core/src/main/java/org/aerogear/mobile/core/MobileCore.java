@@ -100,8 +100,7 @@ public final class MobileCore {
      */
     private void addCoreServices() {
         if (this.configurationMap.get("http") == null) {
-            ServiceConfiguration config = ServiceConfiguration.newConfiguration().setName("http").build();
-            this.configurationMap.put("http", config);
+            this.configurationMap.put("http", new ServiceConfiguration());
         }
     }
 
@@ -162,10 +161,11 @@ public final class MobileCore {
      * @param configurationName the name of the configuration to lookup
      * @return the parsed configuration object of the named configuration, or an empty ServiceConfiguration
      */
-    public ServiceConfiguration getConfig(final String configurationName) {
+    public ServiceConfiguration getConfig(String configurationName) {
         ServiceConfiguration config = configurationMap.get(configurationName);
         if (config == null) {
-            config = ServiceConfiguration.newConfiguration().setName(configurationName).build();
+            config = new ServiceConfiguration();
+            config.setName(configurationName);
             configurationMap.put(configurationName, config);
         }
         return config;
@@ -261,7 +261,7 @@ public final class MobileCore {
             }
         }
 
-        public Builder setServiceRegistry(final ServiceModuleRegistry registryService) {
+        public Builder setServiceRegistry(ServiceModuleRegistry registryService) {
             this.serviceRegistry = registryService;
             return this;
         }
