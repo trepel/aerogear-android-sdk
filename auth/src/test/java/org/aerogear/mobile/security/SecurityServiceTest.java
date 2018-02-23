@@ -6,17 +6,21 @@ import org.aerogear.mobile.core.MobileCore;
 import org.aerogear.mobile.core.metrics.MetricsService;
 import org.aerogear.mobile.security.utils.MockSecurityCheck;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
 public class SecurityServiceTest {
-
     @Mock
     MobileCore mobileCore;
 
@@ -26,19 +30,15 @@ public class SecurityServiceTest {
     @Mock
     MetricsService metricsService;
 
-    @Mock
-    SecurityCheckType securityCheckType;
-
     SecurityService securityService;
     SecurityCheck securityCheck;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        when(mobileCore.getContext()).thenReturn(RuntimeEnvironment.application);
 
-        when(mobileCore.getContext()).thenReturn(context);
         securityCheck = new MockSecurityCheck();
-        when(securityCheckType.getSecurityCheck()).thenReturn(securityCheck);
 
         securityService = new SecurityService();
         securityService.configure(mobileCore, null);
@@ -48,7 +48,7 @@ public class SecurityServiceTest {
     public void testCheckAndSendMetric() {
         when(metricsService.publish()).thenReturn(null);
 
-        securityService.checkAndSendMetric(securityCheckType, metricsService);
+        securityService.checkAndSendMetric(securityCheck, metricsService);
         verify(metricsService, times(1)).publish(any());
     }
 }

@@ -25,9 +25,6 @@ public class SecurityCheckExecutorTest {
     Context context;
 
     @Mock
-    SecurityCheckType securityCheckType;
-
-    @Mock
     MetricsService metricsService;
 
     SecurityCheck mockSecurityCheck;
@@ -39,15 +36,13 @@ public class SecurityCheckExecutorTest {
 
         executor = new SecurityCheckExecutorImpl(context);
         mockSecurityCheck = new MockSecurityCheck();
-
-        when(securityCheckType.getSecurityCheck()).thenReturn(mockSecurityCheck);
     }
 
     @Test
     public void testSendMetrics() {
         when(metricsService.publish(any())).thenReturn(null);
 
-        executor.addCheck(securityCheckType).sendMetrics(metricsService).execute();
+        executor.addCheck(mockSecurityCheck).sendMetrics(metricsService).execute();
 
         verify(metricsService, times(1)).publish(any());
 
@@ -55,7 +50,7 @@ public class SecurityCheckExecutorTest {
 
     @Test
     public void testExecute() {
-        SecurityCheckResult[] results = executor.addCheck(securityCheckType).execute();
+        SecurityCheckResult[] results = executor.addCheck(mockSecurityCheck).execute();
         assertEquals(1, results.length);
         assertEquals(true, results[0].passed());
     }
